@@ -76,11 +76,11 @@ def BFS(field, dot, field_size):
     queue_dots.append(dot)
     while (target_remained > 0 or not finish_found) and queue_is_not_empty:
         dot_counter += 1
-        print(f"queue: {queue_dots}")
         cur_dot = queue_dots.pop(0)
-        print(f"{dot_counter}). dot = {cur_dot}")
         visited_queue_dots.append(cur_dot)
+        print(f"{dot_counter}). dot = {cur_dot}")
         print(f"visited_dots: {visited_queue_dots}")
+        print(f"queue: {queue_dots}")
         if field[cur_dot[0]][cur_dot[1]] == states_dict['TARGET']:
             target_remained -= 1
             print(f"target_remained: {target_remained}")
