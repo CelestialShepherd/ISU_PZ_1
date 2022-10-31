@@ -76,16 +76,16 @@ def BFS(field, dot, field_size):
     while (target_remained > 0 or not finish_found) and queue_is_not_empty:
         dot_counter += 1
         print(f"queue: {queue_dots}")
-        m = queue_dots.pop(0)
+        cur_dot = queue_dots.pop(0)
         max_queue += 1
-        print(f"{dot_counter}). dot = {m}")
-        if field[m[0]][m[1]] == states_dict['TARGET']:
+        print(f"{dot_counter}). dot = {cur_dot}")
+        if field[cur_dot[0]][cur_dot[1]] == states_dict['TARGET']:
             target_remained -= 1
             print(f"target_remained: {target_remained}")
-        elif field[m[0]][m[1]] == states_dict['FINISH']:
+        elif field[cur_dot[0]][cur_dot[1]] == states_dict['FINISH']:
             print(f"finish found")
             finish_found = True
-        for neighbour in get_neighbours(m, field, field_size):
+        for neighbour in get_neighbours(cur_dot, field, field_size):
             if neighbour not in visited_dots:
                 visited_dots.append(neighbour)
                 queue_dots.append(neighbour)
@@ -166,4 +166,3 @@ print("______________\r\nDFS statistics\r\n______________")
 print(f"_______________\r\nDFS_Result\r\n_______________\r\ndot_counter: {dot_counter}")
 print(f"max_queue: {max_queue}\r\n_______________")
 clear_temp_arrays()
-
