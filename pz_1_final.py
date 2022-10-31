@@ -10,6 +10,7 @@ dot_counter = 0
 finish_found = False
 queue_is_not_empty = True
 target_remained = target_count
+main_neighbours = []
 # Временные массивы
 used_dots = []
 visited_dots = []
@@ -70,7 +71,7 @@ def BFS(field, dot, field_size):
     queue_is_not_empty = True
     global visited_dots, queue_dots, target_count
 
-    print("______________\r\nBFS statistics\r\n______________")
+    print("_______________\r\nBFS statistics\r\n_______________")
     target_remained = target_count
     visited_dots.append(dot)
     queue_dots.append(dot)
@@ -95,37 +96,41 @@ def BFS(field, dot, field_size):
             max_queue = len(queue_dots) + len(visited_queue_dots)
         if len(queue_dots) == 0:
             queue_is_not_empty = False
-    print(f"_______________\r\nBFS_Result\r\n_______________\r\ndot_counter: {dot_counter}")
-    print(f"max_queue: {max_queue}\r\n_______________")
+    print(f"_______________\r\nBFS_Result\r\n_______________\r\nvisited_dots: {dot_counter}")
+    print(f"max_memory_items: {max_queue}\r\n_______________")
     clear_temp_arrays()
 
 
 def DFS(field, dot, field_size):
-    global max_queue, queue_counter, dot_counter, finish_found,  queue_is_not_empty, target_remained, main_neighbours
-    global visited_dots, queue_dots, target_count
+    global max_queue, queue_counter, dot_counter, finish_found,  queue_is_not_empty, target_remained
+    counter = 0
 
     if dot not in visited_dots:
         dot_counter += 1
+        visited_dots.append(dot)
         print(f"{dot_counter}). dot = {dot}")
+        print(f"visited_dots: {visited_dots})")
         if field[dot[0]][dot[1]] == states_dict['TARGET']:
             target_remained -= 1
             print(f"target_remained: {target_remained}")
         elif field[dot[0]][dot[1]] == states_dict['FINISH']:
             print(f"finish found")
             finish_found = True
-        visited_dots.append(dot)
         if target_remained == 0 and finish_found:
-            return max_queue, len(visited_dots)
+            return dot_counter, max_queue
         neighbours = get_neighbours(dot, field, field_size)
-        queue_counter += 1
-        if queue_counter > max_queue:
-            max_queue = queue_counter
-        if len(neighbours) == 1:
-            queue_counter = 0
         for neighbour in neighbours:
-            DFS(field, neighbour, field_size)
-
-    return max_queue, len(visited_dots)
+            if neighbour not in main_neighbours and neighbour not in visited_dots:
+                main_neighbours.insert(counter, neighbour)
+                counter += 1
+        print(f"main_neighbours: {main_neighbours})")
+        if len(main_neighbours) + len(visited_dots) > max_queue:
+            max_queue = len(main_neighbours) + len(visited_dots)
+        for neighbour in neighbours:
+            for neighbour in main_neighbours:
+                main_neighbours.pop(0)
+                DFS(field, neighbour, field_size)
+    return dot_counter, max_queue
 
 
 def get_neighbours(dot, field, field_size):
@@ -165,8 +170,8 @@ agent_dot = [2, 2]
 finish_dot = [0, 3]
 
 BFS(search_field, agent_dot, size)
-print("______________\r\nDFS statistics\r\n______________")
-[max_queue, dot_counter] = DFS(search_field, agent_dot, size)
-print(f"_______________\r\nDFS_Result\r\n_______________\r\ndot_counter: {dot_counter}")
-print(f"max_queue: {max_queue}\r\n_______________")
+print("_______________\r\nDFS statistics\r\n_______________")
+[dot_counter, max_queue] = DFS(search_field, agent_dot, size)
+print(f"_______________\r\nDFS_Result\r\n_______________\r\nvisited_dots: {dot_counter}")
+print(f"max_memory_items: {max_queue}\r\n_______________")
 clear_temp_arrays()
