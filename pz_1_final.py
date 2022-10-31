@@ -63,8 +63,8 @@ def dot_is_used(dot, used):
 
 
 def BFS(field, dot, field_size):
-    max_queue = 1
-    dot_counter = 1
+    max_queue = 0
+    dot_counter = 0
     finish_found = False
     queue_is_not_empty = True
     global visited_dots, queue_dots, target_count
