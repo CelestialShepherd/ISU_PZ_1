@@ -160,15 +160,22 @@ def clear_temp_arrays():
     visited_dots = []
     queue_dots = []
 
+    
+def print_field(field, size):
+    print("Search_Field")
+    for i in range (0, size):
+        print(field[i])
+            
 #Два способа заполнения поля:
 #1).Рандомно сгенерированное поле
-#search_field = generate_field(size)
-
+# search_field = generate_field(size)
+# print(agent_dot)
+# print(finish_dot)
 #2).Поле взятое из Методички(Рисунок 3.2)
 search_field = [[0, 1, 0, 3], [0, 2, 0, 1], [2, 0, 4, 1], [0, 1, 0, 2]]
 agent_dot = [2, 2]
 finish_dot = [0, 3]
-
+print_field(search_field, size)
 BFS(search_field, agent_dot, size)
 print("_______________\r\nDFS statistics\r\n_______________")
 [dot_counter, max_queue] = DFS(search_field, agent_dot, size)
