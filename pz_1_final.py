@@ -110,12 +110,6 @@ def DFS(field, dot, field_size):
         visited_dots.append(dot)
         print(f"{dot_counter}). dot = {dot}")
         print(f"visited_dots: {visited_dots})")
-        if field[dot[0]][dot[1]] == states_dict['TARGET']:
-            target_remained -= 1
-            print(f"target_remained: {target_remained}")
-        elif field[dot[0]][dot[1]] == states_dict['FINISH']:
-            print(f"finish found")
-            finish_found = True
         if target_remained == 0 and finish_found:
             return dot_counter, max_queue
         neighbours = get_neighbours(dot, field, field_size)
@@ -123,7 +117,13 @@ def DFS(field, dot, field_size):
             if neighbour not in main_neighbours and neighbour not in visited_dots:
                 main_neighbours.insert(counter, neighbour)
                 counter += 1
-        print(f"main_neighbours: {main_neighbours})")
+        print(f"main_neighbours: {main_neighbours}")
+        if field[dot[0]][dot[1]] == states_dict['TARGET']:
+            target_remained -= 1
+            print(f"target_remained: {target_remained}")
+        elif field[dot[0]][dot[1]] == states_dict['FINISH']:
+            print(f"finish found")
+            finish_found = True
         if len(main_neighbours) + len(visited_dots) > max_queue:
             max_queue = len(main_neighbours) + len(visited_dots)
         for neighbour in neighbours:
