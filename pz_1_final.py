@@ -63,7 +63,8 @@ def dot_is_used(dot, used):
 
 
 def BFS(field, dot, field_size):
-    max_queue = 0
+    visited_queue_dots = []
+    max_queue = -1
     dot_counter = 0
     finish_found = False
     queue_is_not_empty = True
@@ -77,8 +78,9 @@ def BFS(field, dot, field_size):
         dot_counter += 1
         print(f"queue: {queue_dots}")
         cur_dot = queue_dots.pop(0)
-        max_queue += 1
         print(f"{dot_counter}). dot = {cur_dot}")
+        visited_queue_dots.append(cur_dot)
+        print(f"visited_dots: {visited_queue_dots}")
         if field[cur_dot[0]][cur_dot[1]] == states_dict['TARGET']:
             target_remained -= 1
             print(f"target_remained: {target_remained}")
@@ -89,6 +91,8 @@ def BFS(field, dot, field_size):
             if neighbour not in visited_dots:
                 visited_dots.append(neighbour)
                 queue_dots.append(neighbour)
+        if len(queue_dots) + len(visited_queue_dots) > max_queue:
+            max_queue = len(queue_dots) + len(visited_queue_dots)
         if len(queue_dots) == 0:
             queue_is_not_empty = False
     print(f"_______________\r\nBFS_Result\r\n_______________\r\ndot_counter: {dot_counter}")
