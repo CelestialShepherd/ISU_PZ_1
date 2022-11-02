@@ -1,4 +1,5 @@
 from random import randint
+
 # Константы
 obstacle_count = 3
 target_count = 3
@@ -69,10 +70,9 @@ def BFS(field, dot, field_size):
     dot_counter = 0
     finish_found = False
     queue_is_not_empty = True
-    global visited_dots, queue_dots, target_count
+    global visited_dots, queue_dots, target_remained
 
     print("_______________\r\nBFS statistics\r\n_______________")
-    target_remained = target_count
     visited_dots.append(dot)
     queue_dots.append(dot)
     while (target_remained > 0 or not finish_found) and queue_is_not_empty:
@@ -96,13 +96,14 @@ def BFS(field, dot, field_size):
             max_queue = len(queue_dots) + len(visited_queue_dots)
         if len(queue_dots) == 0:
             queue_is_not_empty = False
+            print(f"Can't complete the task!\r\ntarget_remained: {target_remained}\r\nfinish found: {finish_found}")
     print(f"_______________\r\nBFS_Result\r\n_______________\r\nvisited_dots: {dot_counter}")
     print(f"max_memory_items: {max_queue}\r\n_______________")
-    clear_temp_arrays()
+    set_globals_to_default()
 
 
 def DFS(field, dot, field_size):
-    global max_queue, queue_counter, dot_counter, finish_found,  queue_is_not_empty, target_remained
+    global max_queue, queue_counter, dot_counter, finish_found, queue_is_not_empty, target_remained
     counter = 0
 
     if dot not in visited_dots:
@@ -134,7 +135,7 @@ def DFS(field, dot, field_size):
 
 
 def get_neighbours(dot, field, field_size):
-    dot_ins = [[dot[0], dot[1]-1], [dot[0]-1, dot[1]], [dot[0], dot[1]+1], [dot[0]+1, dot[1]]]
+    dot_ins = [[dot[0], dot[1] - 1], [dot[0] - 1, dot[1]], [dot[0], dot[1] + 1], [dot[0] + 1, dot[1]]]
     neighbours = []
     for dot in dot_ins:
         if is_valid_dot(dot, field, field_size):
@@ -144,7 +145,8 @@ def get_neighbours(dot, field, field_size):
 
 def is_valid_dot(dot, field, field_size):
     try:
-        if field[dot[0]][dot[1]] == states_dict['OBSTACLE'] or field[dot[0]][dot[1]] == states_dict['AGENT'] or ((dot[0] < 0 or dot[0] > field_size) or (dot[1] < 0 or dot[1] > field_size)):
+        if field[dot[0]][dot[1]] == states_dict['OBSTACLE'] or field[dot[0]][dot[1]] == states_dict['AGENT'] or (
+                (dot[0] < 0 or dot[0] > field_size) or (dot[1] < 0 or dot[1] > field_size)):
             return False
         elif field[dot[0]][dot[1]] == states_dict['TARGET'] or field[dot[0]][dot[1]] == states_dict['FINISH']:
             return True
@@ -154,31 +156,48 @@ def is_valid_dot(dot, field, field_size):
         return True
 
 
-def clear_temp_arrays():
-    global used_dots, visited_dots, queue_dots
+def set_globals_to_default():
+    global used_dots, visited_dots, queue_dots, target_remained, target_count
     used_dots = []
     visited_dots = []
     queue_dots = []
+    target_remained = target_count
 
-    
+
 def print_field(field, size):
     print("Search_Field")
-    for i in range (0, size):
-        print(field[i])
-            
-#Два способа заполнения поля:
-#1).Рандомно сгенерированное поле
+    for i in range(0, size):
+        for j in range(0, size):
+            if field[i][j] == states_dict['OBSTACLE']:
+                print('[■]', end='')
+            elif field[i][j] == states_dict['TARGET']:
+                print('[x]', end='')
+            elif field[i][j] == states_dict['FINISH']:
+                print('[V]', end='')
+            elif field[i][j] == states_dict['AGENT']:
+                print('[A]', end='')
+            else:
+                print('[ ]', end='')
+        print('\r\n', end='')
+
+
+# Три способа заполнения поля:
+# 1).Рандомно сгенерированное поле
 # search_field = generate_field(size)
 # print(agent_dot)
 # print(finish_dot)
-#2).Поле взятое из Методички(Рисунок 3.2)
+# 2).Поле взятое из Методички(Рисунок 3.2)
 search_field = [[0, 1, 0, 3], [0, 2, 0, 1], [2, 0, 4, 1], [0, 1, 0, 2]]
+# 3).Поле с невозможностью достижения финиша
+#search_field = [[0, 1, 1, 3], [0, 2, 0, 1], [2, 0, 4, 0], [0, 1, 0, 2]]
 agent_dot = [2, 2]
 finish_dot = [0, 3]
 print_field(search_field, size)
 BFS(search_field, agent_dot, size)
 print("_______________\r\nDFS statistics\r\n_______________")
 [dot_counter, max_queue] = DFS(search_field, agent_dot, size)
+if target_remained > 0 or not finish_found:
+    print(f"Can't complete the task!\r\ntarget_remained: {target_remained}\r\nfinish found: {finish_found}")
 print(f"_______________\r\nDFS_Result\r\n_______________\r\nvisited_dots: {dot_counter}")
 print(f"max_memory_items: {max_queue}\r\n_______________")
-clear_temp_arrays()
+set_globals_to_default()
